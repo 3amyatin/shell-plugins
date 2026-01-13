@@ -42,7 +42,7 @@ func TestAPIKeyImporter(t *testing.T) {
 			},
 		},
 		"config file": {
-			Files: map[string]string{},
+			Files:              map[string]string{},
 			ExpectedCandidates: []sdk.ImportCandidate{},
 		},
 	})
