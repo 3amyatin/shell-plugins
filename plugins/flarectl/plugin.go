@@ -10,13 +10,13 @@ func New() schema.Plugin {
 		Name: "flarectl",
 		Platform: schema.PlatformInfo{
 			Name:     "Cloudflare",
-			Homepage: sdk.URL("https://cloudflare.com"), // TODO: Check if this is correct
+			Homepage: sdk.URL("https://www.cloudflare.com"),
 		},
 		Credentials: []schema.CredentialType{
 			APIKey(),
 		},
 		Executables: []schema.Executable{
-			CloudflareCLI(),
+			FlarectlCLI(),
 		},
 	}
 }

@@ -7,7 +7,7 @@ import (
 	"github.com/1Password/shell-plugins/sdk/schema/credname"
 )
 
-func CloudflareCLI() schema.Executable {
+func FlarectlCLI() schema.Executable {
 	return schema.Executable{
 		Name:      "Cloudflare CLI", // TODO: Check if this is correct
 		Runs:      []string{"flarectl"},
