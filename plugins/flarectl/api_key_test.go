@@ -11,12 +11,14 @@ import (
 func TestAPIKeyProvisioner(t *testing.T) {
 	plugintest.TestProvisioner(t, APIKey().DefaultProvisioner, map[string]plugintest.ProvisionCase{
 		"default": {
-			ItemFields: map[sdk.FieldName]string{ // TODO: Check if this is correct
-				fieldname.APIKey: "kXbfANDLo2LbLvE8TZnvc3HYbF",
+			ItemFields: map[sdk.FieldName]string{
+				fieldname.Email:  "user@example.com",
+				fieldname.APIKey: "test-api-key-37-chars-long-here123",
 			},
 			ExpectedOutput: sdk.ProvisionOutput{
 				Environment: map[string]string{
-					"FLARECTL_API_KEY": "kXbfANDLo2LbLvE8TZnvc3HYbF",
+					"CF_API_EMAIL": "user@example.com",
+					"CF_API_KEY":   "test-api-key-37-chars-long-here123",
 				},
 			},
 		},
@@ -26,30 +28,22 @@ func TestAPIKeyProvisioner(t *testing.T) {
 func TestAPIKeyImporter(t *testing.T) {
 	plugintest.TestImporter(t, APIKey().Importer, map[string]plugintest.ImportCase{
 		"environment": {
-			Environment: map[string]string{ // TODO: Check if this is correct
-				"FLARECTL_API_KEY": "kXbfANDLo2LbLvE8TZnvc3HYbF",
+			Environment: map[string]string{
+				"CF_API_EMAIL": "user@example.com",
+				"CF_API_KEY":   "test-api-key-37-chars-long-here123",
 			},
 			ExpectedCandidates: []sdk.ImportCandidate{
 				{
 					Fields: map[sdk.FieldName]string{
-						fieldname.APIKey: "kXbfANDLo2LbLvE8TZnvc3HYbF",
+						fieldname.Email:  "user@example.com",
+						fieldname.APIKey: "test-api-key-37-chars-long-here123",
 					},
 				},
 			},
 		},
-		// TODO: If you implemented a config file importer, add a test file example in flarectl/test-fixtures
-		// and fill the necessary details in the test template below.
 		"config file": {
-			Files: map[string]string{
-				// "~/path/to/config.yml": plugintest.LoadFixture(t, "config.yml"),
-			},
-			ExpectedCandidates: []sdk.ImportCandidate{
-			// 	{
-			// 		Fields: map[sdk.FieldName]string{
-			// 			fieldname.Token: "kXbfANDLo2LbLvE8TZnvc3HYbF",
-			// 		},
-			// 	},
-			},
+			Files: map[string]string{},
+			ExpectedCandidates: []sdk.ImportCandidate{},
 		},
 	})
 }
