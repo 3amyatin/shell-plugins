@@ -1,8 +1,6 @@
 package flarectl
 
 import (
-	"context"
-
 	"github.com/1Password/shell-plugins/sdk"
 	"github.com/1Password/shell-plugins/sdk/importer"
 	"github.com/1Password/shell-plugins/sdk/provision"
@@ -14,57 +12,38 @@ import (
 func APIKey() schema.CredentialType {
 	return schema.CredentialType{
 		Name:          credname.APIKey,
-		DocsURL:       sdk.URL("https://flarectl.com/docs/api_key"), // TODO: Replace with actual URL
-		ManagementURL: sdk.URL("https://console.flarectl.com/user/security/tokens"), // TODO: Replace with actual URL
+		DocsURL:       sdk.URL("https://developers.cloudflare.com/fundamentals/api/get-started/keys/"),
+		ManagementURL: sdk.URL("https://dash.cloudflare.com/profile/api-tokens"),
 		Fields: []schema.CredentialField{
 			{
+				Name:                fieldname.Email,
+				MarkdownDescription: "Email address associated with your Cloudflare account.",
+				Optional:            false,
+			},
+			{
 				Name:                fieldname.APIKey,
-				MarkdownDescription: "API Key used to authenticate to Cloudflare.",
+				MarkdownDescription: "Global API Key for your Cloudflare account. Found in your [Cloudflare profile](https://dash.cloudflare.com/profile/api-tokens).",
 				Secret:              true,
+				Optional:            false,
 				Composition: &schema.ValueComposition{
-					Length: 30,
+					Length: 37,
 					Charset: schema.Charset{
-						Uppercase: true,
 						Lowercase: true,
+						Uppercase: true,
 						Digits:    true,
 					},
 				},
 			},
 		},
-		DefaultProvisioner: provision.EnvVars(defaultEnvVarMapping),
+		DefaultProvisioner: provision.EnvVars(map[string]sdk.FieldName{
+			"CF_API_EMAIL": fieldname.Email,
+			"CF_API_KEY":   fieldname.APIKey,
+		}),
 		Importer: importer.TryAll(
-			importer.TryEnvVarPair(defaultEnvVarMapping),
-			TryCloudflareConfigFile(),
-		)}
+			importer.TryEnvVarPair(map[string]sdk.FieldName{
+				"CF_API_EMAIL": fieldname.Email,
+				"CF_API_KEY":   fieldname.APIKey,
+			}),
+		),
+	}
 }
-
-var defaultEnvVarMapping = map[string]sdk.FieldName{
-	"FLARECTL_API_KEY": fieldname.APIKey, // TODO: Check if this is correct
-}
-
-// TODO: Check if the platform stores the API Key in a local config file, and if so,
-// implement the function below to add support for importing it.
-func TryCloudflareConfigFile() sdk.Importer {
-	return importer.TryFile("~/path/to/config/file.yml", func(ctx context.Context, contents importer.FileContents, in sdk.ImportInput, out *sdk.ImportAttempt) {
-		// var config Config
-		// if err := contents.ToYAML(&config); err != nil {
-		// 	out.AddError(err)
-		// 	return
-		// }
-
-		// if config.APIKey == "" {
-		// 	return
-		// }
-
-		// out.AddCandidate(sdk.ImportCandidate{
-		// 	Fields: map[sdk.FieldName]string{
-		// 		fieldname.APIKey: config.APIKey,
-		// 	},
-		// })
-	})
-}
-
-// TODO: Implement the config file schema
-// type Config struct {
-//	APIKey string
-// }
