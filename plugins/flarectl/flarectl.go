@@ -9,9 +9,9 @@ import (
 
 func FlarectlCLI() schema.Executable {
 	return schema.Executable{
-		Name:      "Cloudflare CLI", // TODO: Check if this is correct
+		Name:      "flarectl",
 		Runs:      []string{"flarectl"},
-		DocsURL:   sdk.URL("https://flarectl.com/docs/cli"), // TODO: Replace with actual URL
+		DocsURL:   sdk.URL("https://github.com/cloudflare/cloudflare-go/tree/master/cmd/flarectl"),
 		NeedsAuth: needsauth.IfAll(
 			needsauth.NotForHelpOrVersion(),
 			needsauth.NotWithoutArgs(),
